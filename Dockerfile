@@ -12,9 +12,3 @@ RUN npm install
 
 # 残りのアプリケーションのコードをコピー
 COPY . /workspace/
-
-# # TypeScriptをビルド
-# RUN npm run build
-
-# # アプリケーションを起動
-# CMD ["npm", "start"]
