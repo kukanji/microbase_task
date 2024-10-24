@@ -1,0 +1,11 @@
+{
+  "name": "microbase_task",
+  "version": "1.0.0",
+  "description": "株式会社マイクロベースの選考課題",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
