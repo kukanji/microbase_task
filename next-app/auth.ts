@@ -1,9 +1,8 @@
-"use server";
+// "use server";
 
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import bcrypt from "bcrypt";
 import { z } from "zod";
 import prisma from "./db";
 import { User } from "@prisma/client";
@@ -36,7 +35,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { email, password } = parsedCredentials.data;
           const user = await getUser(email);
           if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          // const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch = password === user.password;
 
           if (passwordsMatch)
             return { email: user.email, password: user.password };
