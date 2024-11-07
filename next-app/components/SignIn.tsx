@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/Button";
 import { useActionState } from "react";
 import { authenticate } from "@/app/lib/actions";
