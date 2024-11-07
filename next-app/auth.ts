@@ -1,3 +1,5 @@
+"use server";
+
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
@@ -9,7 +11,7 @@ import { User } from "@prisma/client";
 async function getUser(email: string): Promise<User | undefined> {
   try {
     const user = await prisma.user.findUnique({ where: { email: email } });
-    return user;
+    return user as User;
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
@@ -36,7 +38,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
-          if (passwordsMatch) return user;
+          if (passwordsMatch)
+            return { email: user.email, password: user.password };
         }
 
         console.log("Invalid credentials");
