@@ -18,6 +18,26 @@ async function getUser(email: string): Promise<User | undefined> {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: "/sign-in",
+  },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      // pathnameが/profileを含んでいたら
+      const isOnProfile = nextUrl.pathname.includes("/profile");
+      if (isOnProfile) {
+        console.log("isOnProfile", isOnProfile);
+        if (isLoggedIn) return true;
+        return Response.redirect(new URL("/sign-in", nextUrl)); // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        console.log("isLoggedIn", isLoggedIn);
+        // return Response.redirect(new URL("/profile", nextUrl));
+        return true;
+      }
+      return true;
+    },
+  },
   providers: [
     Google,
     Credentials({
