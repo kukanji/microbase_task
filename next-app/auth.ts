@@ -26,12 +26,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isLoggedIn = !!auth?.user;
       // pathnameが/profileを含んでいたら
       const isOnProfile = nextUrl.pathname.includes("/profile");
+      const isSignIn = nextUrl.pathname.includes("/sign-in");
       if (isOnProfile) {
-        console.log("isOnProfile", isOnProfile);
         if (isLoggedIn) return true;
-        return Response.redirect(new URL("/sign-in", nextUrl)); // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        console.log("isLoggedIn", isLoggedIn);
+        return false; // Redirect unauthenticated users to login page
+      } else if (isSignIn) {
+        if (isLoggedIn) {
+          return Response.redirect(new URL("/profile", nextUrl));
+        }
         // return Response.redirect(new URL("/profile", nextUrl));
         return true;
       }
