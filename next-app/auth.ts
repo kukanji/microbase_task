@@ -7,13 +7,13 @@ import { z } from "zod";
 import prisma from "./db";
 import { User } from "@prisma/client";
 
-async function getUser(email: string): Promise<User | undefined> {
+async function getUser(email: string): Promise<User | boolean> {
   try {
     const user = await prisma.user.findUnique({ where: { email: email } });
     return user as User;
   } catch (error) {
     console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
+    return false;
   }
 }
 
@@ -36,6 +36,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
         // return Response.redirect(new URL("/profile", nextUrl));
         return true;
+      } else if (isLoggedIn) {
+        console.log("is logged in");
+        if (auth && auth.user && auth.user.email) {
+          const user = getUser(auth.user.email);
+          console.log("user contents", user);
+          console.log("auth user existed");
+          if (!user) {
+            console.log("before user created");
+            const user = prisma.user.create({
+              data: {
+                name: auth.user.name,
+                email: auth.user.email,
+                password: "",
+              },
+            });
+            console.log(user);
+            console.log("user created");
+          }
+        }
       }
       return true;
     },
