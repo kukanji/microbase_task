@@ -4,7 +4,7 @@ export type User = {
   id: number;
   name: string | null;
   email: string;
-  password: string;
+  password: string | null;
 };
 
 export const SignupFormSchema = z.object({
